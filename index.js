@@ -67,11 +67,6 @@ const twitters = [
 
 let users = [];
 
-app.get( "/tweets", (req, res ) => {
-    res.send(twitters)
-})
-
-
 app.post( "/sign-up", ( req, res ) => {
     
     const { username, avatar } = req.body;
@@ -92,9 +87,16 @@ app.post( "/sign-up", ( req, res ) => {
 
 })
 
+
+app.get( "/tweets", (req, res ) => {
+    res.send(twitters)
+})
+
+
 app.post( "/tweets", (req, res) => {
 
-    const { username, tweet } = req.body;
+    const { tweet } = req.body;
+    const username = req.headers.user;
 
     if( !username || !tweet ){
         console.log(username);
@@ -114,8 +116,18 @@ app.post( "/tweets", (req, res) => {
     twitters.push(newTweet)
 
     res.status(201).send("OK")
+
 } )
 
+
+app.get( "/tweets/:userName", ( req, res ) => {
+
+    const user = req.params.userName;
+    const tweetUser = twitters.filter( obj => obj.username === user);
+
+    res.status(201).send(tweetUser);
+
+})
 
 
 app.listen(5000, () => {
